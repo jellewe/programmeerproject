@@ -14,9 +14,9 @@ The solution is to show which food is grown by which countries, and how much of 
 
 ![Sketch](doc/sketch.jpg)
 
-The main features that will be available to users are that they are able to click on a country on a world map, and instantly see which foods are grown most by that country in a bar chart. They can then click on a bar in the bar chart, and they will see a line graph of the production of that food over the years in the specific country.
+The main features that will be available to users are that they are able to click on a country on a map of a continent (selected by a dropdown menu), and instantly see which foods are grown most by that country in a bar chart. They can then click on a bar in the bar chart, and they will see a line graph of the production of that food over the years in the specific country.
 
-All of these features are part of the minimum viable product.
+All of these features (except the dropdown menu) are part of the minimum viable product.
 
 Features that won't be part of the minimum viable product will be a dropdown menu with which you can choose a specific continent to show in the map, and checkboxes that will allow you to change which food types are shown in the bar chart.
 
