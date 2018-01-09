@@ -1,5 +1,6 @@
 # programmeerproject
 Programming project for the programming minor at the University of Amsterdam
+
 Jelle Witsen Elias
 
 This application will show food production throughout the world. The goal is to show people which countries produce which types of food, and what they have been producing throughout the past 50 years or so.
@@ -15,6 +16,10 @@ The solution is to show which food is grown by which countries, and how much of 
 The main features that will be available to users are that they are able to click on a country on a world map, and instantly see which foods are grown most by that country in a bar chart. They can then click on a bar in the bar chart, and they will see a line graph of the production of that food over the years in the specific country.
 
 All of these features are part of the minimum viable product.
+
+Features that won't be part of the minimum viable product will be a dropdown menu with which you can choose a specific continent to show in the map, and checkboxes that will allow you to change which food types are shown in the bar chart.
+
+These features won't be part of the minimum viable product, but are important as well.
 
 ## Prerequisites
 The data source is a Kaggle database:
