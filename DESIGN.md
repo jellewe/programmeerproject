@@ -38,5 +38,12 @@ These is a list of the technical components of the application:
 	selections in the other charts and the selections in the dropdown- and
 	checkbox menu
 
+- Function to seperately process the CSV to only useful data
+
+	This function will scrape the useful the data from the CSV file. It will
+	only keep the useful data.
+
 ## List of used API's or D3 plugins
-Todo
+- The topoJSON d3 plugin to draw the map:
+
+	[topojson](https://d3js.org/topojson.v1.min.js)
