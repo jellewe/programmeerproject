@@ -3,7 +3,7 @@ Programming project for the programming minor at the University of Amsterdam
 
 Jelle Witsen Elias
 
-# Summary
+## Summary
 This application will show food production throughout the world. The goal is to show people which countries produce which types of food, and what they have been producing throughout the past 50 years or so.
 
 ## Problem statement
