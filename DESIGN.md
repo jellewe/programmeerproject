@@ -29,7 +29,9 @@ These is a list of the technical components of the application:
 - Line chart
 
 	The line chart shows how much the Netherlands has exported to the selected
-	country, over the years 1992 - 2013.
+	country, over the years 1992 - 2013. Lines will be added when new countries
+	are clicked, and they will be removed when visible countries are clicked
+	again.
 - Dropdown menu - continent selector
 
 	The dropdown menu selects a continent, which then makes the map zoom in to the
