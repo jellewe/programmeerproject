@@ -44,7 +44,7 @@ The main data source is a Kaggle database:
 
 The second data source, with information about Dutch food export to countries,
 is from wits.worldbank.org:
-[Database2]https://wits.worldbank.org/CountryProfile/en/Country/NLD/StartYear/1992/EndYear/2013/TradeFlow/Export/Indicator/XPRT-TRD-VL/Partner/BY-COUNTRY/Product/16-24_FoodProd
+[Database2](https://wits.worldbank.org/CountryProfile/en/Country/NLD/StartYear/1992/EndYear/2013/TradeFlow/Export/Indicator/XPRT-TRD-VL/Partner/BY-COUNTRY/Product/16-24_FoodProd)
 
 The external components used by the website are the d3 library for javascript:
 [d3](https://d3js.org/)
