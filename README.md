@@ -4,31 +4,51 @@ Programming project for the programming minor at the University of Amsterdam
 Jelle Witsen Elias
 
 ## Summary
-This application will show food production throughout the world. The goal is to show people which countries produce which types of food, and what they have been producing throughout the past 50 years or so.
+This application will show food production throughout the world, and how much
+the Netherlands has been exporting to a specific country. The goal is to
+show people which countries produce which types of food, and what they have been
+producing throughout the past few years, and to show how much the Netherlands
+has been exporting to these countries.
 
 ## Problem statement
-The 'problem' that this project addresses is that people buy food in stores, but have no idea where it comes from and who actually produces it. This website tries to shine some light on this. The audience is everyone that buys food in shops (so almost everyone, but not chidren and people who grow everything they eat themselves).
+The 'problem' is that a lot of people in the Netherlands have no idea how big
+the Netherlands is in the food export industry. It actually is the second
+largest food exporter in the world. People also generally don't know a lot
+about which different foods are grown/used in other countries than their own.
 
 ## Solution
-The solution is to show which food is grown by which countries, and how much of it per country. The website will also show how much the food has been grown over the course of the years, from 1961 to 2013.
+The solution is to show which food is grown by which countries, and how much of
+it per country. The website will also show how much of the food type the
+Netherlands exports to the specific country.
 
 ![Sketch](doc/sketch.jpg)
 
-The main features that will be available to users are that they are able to click on a country on a map of a continent (selected by a dropdown menu), and instantly see which foods are grown most by that country in a bar chart. They can then click on a bar in the bar chart, and they will see a line graph of the production of that food over the years in the specific country.
+The main features that will be available to users are that they are able to
+click on a country on a world map, and instantly see which foods are grown most
+by that country in a bar chart. The map will also show the total food production
+of all the countries in the world by color-mapping information to them. There
+will also be a third visualization: a line chart of the food export of the
+Netherlands to the specific country over the course of the years 1992 - 2013.
 
-All of these features (except the dropdown menu) are part of the minimum viable product.
+Other features are a slider below the map with which the user can switch between
+different years to view in the map, and checkboxes that will allow you to change
+which food types are shown in the bar chart.
 
-Features that won't be part of the minimum viable product will be a dropdown menu with which you can choose a specific continent to show in the map, and checkboxes that will allow you to change which food types are shown in the bar chart.
-
-These features won't be part of the minimum viable product, but are important as well.
+All of these features will be part of the minimum viable product. A feature that
+is optional to implement is a dropdown menu above the map with which you can
+select a continent to zoom in to.
 
 ## Prerequisites
-The data source is a Kaggle database:
+The main data source is a Kaggle database:
 [Database](https://www.kaggle.com/dorbicycle/world-foodfeed-production/data)
+
+The second data source, with information about Dutch food export to countries,
+is from wits.worldbank.org:
+[Database2]https://wits.worldbank.org/CountryProfile/en/Country/NLD/StartYear/1992/EndYear/2013/TradeFlow/Export/Indicator/XPRT-TRD-VL/Partner/BY-COUNTRY/Product/16-24_FoodProd
 
 The external components used by the website are the d3 library for javascript:
 [d3](https://d3js.org/)
 
-The hardest part about this problem might be the double clickable charts. This means that it's possible to dive into the data two levels deep. With the proper use of different functions, I think it should be possible though.
-
-
+A hard part of making this application might be making sure that the two
+different datasets work together well. I think this can be overcome by properly
+preparing them, though.
