@@ -1,78 +1,84 @@
 import csv
 import os
 
+# constants for total amount of years in dataset and first year
+YEARS = 53
+FIRST_YEAR = 1961
+
+# dict with country abbreveations as keys and lists with production over the years as values
+productionDict = {}
+
 with open(os.path.relpath("../doc/dataset.csv"), encoding='latin-1') as file:
     reader = csv.reader(file)
 
-    # first row with information about columns; name of first country
-    columnDescription = next(reader)
-    country = next(reader)[2]
+    # variable that contains descriptions (first row of csv) of columns
+    columnDescriptions = next(reader)
 
-    # boolean to check whether in new row
-    newRow = True
+    # preparations for first country
+    row1 = next(reader)
+    countryCode = row1[0]
+    curRow = row1
 
-    # lists to keep track of products counted; dict with counter for products
-    productsListFoodFeed = []
-    productsList = []
-    totalProducedDict = {}
+    # iterate over every row in CSV
+    while not curRow == []:
 
+        # list with total production data per year for current country
+        productionList = []
 
-    # iterate over rows in file, add all values of a certain food type together
-    for row in reader:
+        # initialize productions list with zero's for every year
+        for i in range(YEARS):
+            productionList.append(0)
 
-        newRow = True
-        # if new country, set boolean to true and print dict for old country
-        newCountry = False
-        if not country == row[2]:
-            newCountry = True
-            # print("\n" + country + str(totalProducedDict))
-            productsListFoodFeed = []
-            productsList = []
+        # while still reading rows about current country, calculate total production per year
+        while curRow[0] == countryCode:
 
-        # update country name, set column index and total produced of new country to 0
-        country = row[2]
-        columnIndex = 0
-        # totalProduced = 0
+            # iterate over values in current row
+            for i in range(len(curRow)):
 
-        # if product already counted (some duplicates in data file), continue to next row
-        # print(productsList)
-        # print(row[4] + row[6])
-        if not row[4] + row[6] in productsListFoodFeed:
-            productsListFoodFeed.append(row[4] + row[6])
+                # store current country abbrevation in variable
+                if columnDescriptions[i] == 'Area Abbreviation':
+                    curCountry = curRow[i]
+
+                # if column has information about production and contains information about product group
+                if columnDescriptions[i][:1] == 'Y' and curRow[3][:2] == '29':
+
+                    # convert year to list index and update list (only if value in current field)
+                    index = int(columnDescriptions[i][-4:]) - FIRST_YEAR
+                    if curRow[i]:
+                        productionList[index] += int(curRow[i])
+
+            # advance to next row in CSV, unless end of file reached
+            try:
+                curRow = next(reader)
+            except StopIteration:
+                curRow = []
+                break
+
+        # print current country's code and production list
+        # print(countryCode)
+        # print(productionList)
+
+        productionDict[countryCode] = productionList
+        print(productionDict)
+
+        # advance to next country in CSV, unless end of file reached
+        if curRow:
+            countryCode = curRow[0]
         else:
-            newRow = True
-            continue
+            break
 
-        for value in row:
+with open(os.path.relpath("../doc/total_production.csv"), 'w') as outfile:
+    writer = csv.writer(outfile)
 
-            # if current column has produce value, add value to totalProduced
-            if (columnDescription[columnIndex][:1] == 'Y'):
-                if newRow == True:
-                    if not row[4] in productsList:
-                        if value:
-                            totalProduced = int(value)
-                        else:
-                            totalProduced = 0
-                    else:
-                        if value:
-                            print("hier")
-                            totalProduced += int(value)
-                else:
-                    if value:
-                        totalProduced += int(value)
+    # write first line of CSV with column descriptions
+    row0 = "Country_code"
+    for i in range(YEARS):
+        row0 += " Y" + str(i + FIRST_YEAR)
+    writer.writerow(row0.split())
 
-                # set new row to false
-                newRow = False
-
-            # add 1 to column index
-            columnIndex += 1
-
-        if not row[4] in productsList:
-            productsList.append(row[4])
-
-        # update dict for current country
-        totalProducedDict[row[4]] = totalProduced
-        newRow = True
-
-    # print final country's information
-    print(country + str(totalProducedDict))
+    # write rows with country production info to CSV
+    for key, productionList in productionDict.items():
+        row = key
+        for value in productionList:
+            row += " " + str(value)
+        writer.writerow(row.split())
