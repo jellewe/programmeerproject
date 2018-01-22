@@ -11,3 +11,27 @@ Today I did a few things:
 Today I finished the color scale for the map, and started working on the bar chart. The bar chart doesn't show any elements yet, though, and I get an error I don't understand. I want to finish the bar chart tomorrow.
 
 I also processed the data more properly today, so that the 'food' and 'feed' elements in the JSON are merged to a single value. I'm not planning to use that information.
+
+# day 3
+
+I still had to process the data further today, making sure that only food groups are shown in the bar chart, otherwise there would be too many bars. I worked on the bar chart as well, which is almost finished.
+
+# day 4
+
+Today I finished the bar chart. I also downloaded some CSV files from WITS.com with which I'm able to convert countries ([Link](https://wits.worldbank.org/wits/wits/witshelp/content/codes/country_codes.htm)). Now I can start working on the line chart.
+
+# day 5
+
+Today I finished the line chart and we gave a presentation about the alpha version I have now. I still need to find a way to show missing data in the line chart.
+
+I also realized that the data for my map was food consumed by a country, not produced. This is still okay for my story though.
+
+I got some feedback on the map at the presentation, and I think I want to divide the total amount of food consumed by the amount of people that live in a country.
+
+# day 6
+
+I am now using d3.slider.js for the slider above the map: ([Link](https://github.com/MasterMaps/d3-slider)). This uses the 3-clause BSD license: ([Link] https://opensource.org/licenses/BSD-3-Clause). I should include these links in the final readme.
+
+So I finished the slider today, it's fully working. I also made the map and bar chart interactive: if a country on the map is clicked, information for that country will be shown in the barchart. I should make the line chart interactive as well, tomorrow.
+
+I also changed the color of countries with no data to a light shade of grey. The previously used black was not very well inditinguishable with the dark shade of green used for the countries with highest consumption.
