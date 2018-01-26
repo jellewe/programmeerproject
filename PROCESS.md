@@ -35,3 +35,25 @@ I am now using d3.slider.js for the slider above the map: ([Link](https://github
 So I finished the slider today, it's fully working. I also made the map and bar chart interactive: if a country on the map is clicked, information for that country will be shown in the barchart. I should make the line chart interactive as well, tomorrow.
 
 I also changed the color of countries with no data to a light shade of grey. The previously used black was not very well inditinguishable with the dark shade of green used for the countries with highest consumption.
+
+# day 7
+
+Today I linked the line chart with the map as well: when a country is clicked on the map, both the line chart and the bar chart are updated.
+
+I'm also using a dataset with world population from Kaggle, to divide the consumption data in the map by the amount of people living in the country: [Link](https://www.kaggle.com/centurion1986/world-population/data)
+
+I implemented this division as well. I also based the total production value for the map only on the food consumption, not feed. This makes more sense for the visualization, I feel.
+
+I should still implement a placeholder for the line chart if no data is available at all (some data is OK to show in the chart, but no data is not). I should also implement the checkbox system for the bar chart. And make the line chart multiseries.
+
+# day 8
+
+This day I was ill and didn't work.
+
+# day 9
+
+Today I only worked on the checkbox system, which is quite difficult to make and is still not quite working. I should finish it tomorrow.
+
+# day 10
+
+I managed to finish the bar chart checkboxes today. I should still make the barchart content update when I press a button, but this shouldn't be too difficult to implement. I'm happy the checkboxes are fundamentally working now.

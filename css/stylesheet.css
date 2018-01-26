@@ -17,6 +17,11 @@ x.axis path {
   fill: #006d2c;
 }
 
+#mapContainer {
+  position: relative;
+  height: 850px;
+}
+
 #slider {
   margin: 20px 0 20px 20px;
 }
@@ -24,3 +29,23 @@ x.axis path {
 #margin-top {
   height: 20px
 }
+
+#charts {
+  background-color: #edf8e9
+}
+
+#checkboxes {
+  transform: translate(20px)
+}
+
+#bottom {
+  background-color: #edf8e9
+}
+
+.form-check-label {
+  font-size: 10px
+}
+
+/*#top {
+  background-color: #F4F4F4
+}*/

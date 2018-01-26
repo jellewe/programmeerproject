@@ -15,7 +15,7 @@ window.onload = function() {
   })
 }
 
-function drawBarChart(data, country, year) {
+function drawBarChart(data, country, year, xDomain) {
   // remove all children of html map div
   d3.select("#barChart").selectAll("*").remove()
 
@@ -44,7 +44,10 @@ function drawBarChart(data, country, year) {
     .range([height, 0])
 
   // scale for x dimension, arbitrary country that contains information about all food types
-  xDomain = Object.keys(data[country]["items"])
+
+  if (!xDomain) {
+    xDomain = Object.keys(data[country]["items"])
+  }
 
   // filter only elements which start with 29, indicating it's a product group
   // xDomain = xDomain.filter(function(element) {
@@ -93,8 +96,6 @@ function drawBarChart(data, country, year) {
     dataArray.push(data[country]["items"][key]["production"][year])
   }
 
-  console.log(dataArray)
-
   // select all bars and make new bar for every data element
   var barSelection = barChart.select(".bars").selectAll("rect")
     .data(dataArray)
@@ -103,6 +104,32 @@ function drawBarChart(data, country, year) {
     .attr("y", function(d) { return yScale(d) })
     .attr("height", function(d) { return height - yScale(d) })
     .attr("width", barWidth - 1)
+
+
+  // checkboxes = d3.select("#checkboxes")
+
+  // remove all children of html checkbox div
+  // checkboxes.selectAll("*").remove()
+
+  items = Object.keys(data[country]["items"])
+  drawCheckboxes(items, xDomain, data, country)
+
+  items.forEach(function(item) {
+    var checkboxId = "#checkbox" + item
+    d3.select(checkboxId).on("change", function() {
+      if ($.inArray(item, xDomain) > -1) {
+        index = xDomain.indexOf(item)
+        xDomain.splice(index, 1)
+      }
+      else {
+        console.log("hier")
+        xDomain.push(item)
+      }
+
+      console.log(xDomain)
+      drawBarChart(data, country, year, xDomain)
+    })
+  });
 }
 
 
@@ -117,7 +144,6 @@ function maxValue(country, year) {
       }
     // }
   }
-  console.log(max)
   return max
 }
 
@@ -127,7 +153,7 @@ function drawLineChart(data, country) {
   d3.select("#lineChart").selectAll("*").remove()
 
   // margins around graph in pixels
-  var margin = {top: 30, right: 30, bottom: 50, left: 70};
+  var margin = {top: 70, right: 30, bottom: 100, left: 50}
 
     chartSize = d3.select("#lineChart").node().getBoundingClientRect()
 
@@ -148,9 +174,9 @@ function drawLineChart(data, country) {
 
     exportArray = []
     yearArray = []
-    for (key in exportData["PRY"]) {
+    for (key in exportData[country]) {
       yearArray.push(parseInt(key))
-      exportArray.push(parseInt(exportData["PRY"][key]))
+      exportArray.push(parseInt(exportData[country][key]))
     }
 
     // scales for x and y dimensions
@@ -179,13 +205,19 @@ function drawLineChart(data, country) {
       .style("font-size", "10px")
       .attr("transform", "translate(0," + height + ")")
       .call(xAxis)
+      .selectAll("text")
+        .style("font-size", "7px")
+
 
     // g element for y axis
     lineChart.append("g")
-        .attr("class", "y axis")
-        .call(yAxis)
+      .attr("class", "y axis")
+      .call(yAxis)
+      .selectAll("text")
+        .style("font-size", "7px")
 
     var lineFunction = d3.svg.line()
+      .defined(function(d) { return d })
       .x(function(d, i) { return xScale(yearArray[i]); })
       .y(function(d) { return yScale(d)})
 
@@ -208,14 +240,15 @@ function mapChart(data, year) {
   // dict for color data per country
   var colorData = {}
 
-  // get total production values per country from json file
+  // get total production values per country from json file, multiplying production weight by 1000000 to get value in kilograms
   for (var country in data) {
-    colorData[country] = parseInt(data[country]["total_production"][year])
+    colorData[country] = parseInt(data[country]["total_production"][year]) * 1000000 /
+    parseInt(data[country]["population"][year])
   }
 
   // scaler to map production to color shades (< 1 means no data)
   mapScaler = d3.scale.threshold()
-   .domain([1, 5000, 20000, 100000, 200000])
+   .domain([1, 200, 400, 800, 1500])
    .range(["0", "1", "2", "3", "4", "5"])
 
   // convert production data to color category
@@ -250,8 +283,72 @@ function mapChart(data, year) {
       .selectAll("path")
         .on("click", function(geography) {
           countryCode = geography.id
-          console.log(geography)
           drawLineChart(data, countryCode)
           drawBarChart(data, countryCode, year)
+          window.scrollTo(0, document.body.scrollHeight)
         })
 };
+
+function drawCheckboxes(checkboxData, checkedItems, data, country) {
+  var checkboxes = d3.select("#checkboxes")
+
+  // remove all children of html checkbox div
+  d3.selectAll(".col").selectAll("*").remove()
+
+  var columns = 3
+  var rows = 7
+
+  for (i = 0; i < columns; i++) {
+    var columnId = "#col" + String(i)
+    for (j = 0; j < rows; j++) {
+      var checkboxNumber = j + i * rows
+
+      // determine id for checkbox
+      if (checkboxData[checkboxNumber]) {
+        var checkboxId = "checkbox" + String(checkboxData[checkboxNumber])
+      }
+      else {
+        var checkboxId = "checkbox" + String(checkboxNumber)
+      }
+      var checkDivId = "checkDiv" + String(checkboxNumber)
+      checkboxes.select(columnId)
+        .append("div")
+          .attr("class", "form-check")
+          .attr("id", checkDivId)
+          .append("input")
+            .attr("class", "form-check-input")
+            .attr("type", "checkbox")
+            .attr("value", "")
+            .attr("id", checkboxId)
+            .property("checked", true)
+
+      // disabled checkboxes if no data for food group
+      if (!checkboxData[checkboxNumber]) {
+        d3.select("#" + checkboxId)
+          .property("disabled", true)
+          .property("checked", false)
+      }
+
+      if (!($.inArray(String(checkboxData[checkboxNumber]), checkedItems) > -1)) {
+        d3.select("#" + checkboxId)
+          .property("checked", false)
+      }
+
+      d3.select("#" + checkDivId)
+        .append("label")
+          .attr("class", "form-check-label")
+          .attr("for", checkboxId)
+
+      if (data[country]["items"][checkboxData[checkboxNumber]] != undefined) {
+        d3.select("#" + checkDivId).select("label")
+          .html(data[country]["items"][checkboxData[checkboxNumber]]["name"])
+      }
+
+      // disabled checkboxes are not displayed properly without this code
+      else {
+        d3.select("#" + checkDivId).select("label")
+          .html("")
+      }
+    }
+  }
+}
