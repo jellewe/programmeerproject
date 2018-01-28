@@ -46,6 +46,14 @@ x.axis path {
   font-size: 10px
 }
 
+.legend-header {
+  font-size: 12px
+}
+
+.legend-text {
+  font-size: 10px
+}
+
 /*#top {
   background-color: #F4F4F4
 }*/
