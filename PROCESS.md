@@ -57,3 +57,11 @@ Today I only worked on the checkbox system, which is quite difficult to make and
 # day 10
 
 I managed to finish the bar chart checkboxes today. I should still make the barchart content update when I press a button, but this shouldn't be too difficult to implement. I'm happy the checkboxes are fundamentally working now.
+
+# day 11
+
+Finished checkbox system. Made tooltip with information for map. Line chart and bar charts show messages if no data for country.
+
+# day 12
+
+Added titles to charts. Commented code. Fixed bug if undefined value for bar chart. Website style improvements.

@@ -17,6 +17,14 @@ x.axis path {
   fill: #006d2c;
 }
 
+.jumbotron {
+  background-color: #edf8e9 !important;
+}
+
+#data-message {
+  text-align: center
+}
+
 #mapContainer {
   position: relative;
   height: 850px;
@@ -38,8 +46,22 @@ x.axis path {
   transform: translate(20px)
 }
 
+#chart-titles {
+  background-color: #edf8e9;
+  transform: translate(0, 50px);
+  text-align: center
+}
+
+#line:hover {
+  stroke-width:5
+}
+
 #bottom {
   background-color: #edf8e9
+}
+
+#line-name {
+  font-size: 14px
 }
 
 .form-check-label {

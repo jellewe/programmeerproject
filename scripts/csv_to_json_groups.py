@@ -4,14 +4,17 @@ import json
 
 # open files, initialize readers for CSV files
 with open(os.path.relpath("../doc/WorldPopulation.csv")) as populationCsv,\
+    open(os.path.relpath("../doc/WITS_country_codes.csv")) as countryCodesCsv,\
     open(os.path.relpath("../doc/dataset.csv"), encoding='latin-1') as dataset,\
     open(os.path.relpath("../doc/total_production.csv"), encoding='latin-1') as productionCsv,\
     open(os.path.relpath("../doc/dataset_foodgroups.json"), "w") as outfile:
+    countryCodesReader = csv.reader(countryCodesCsv)
     datasetReader = csv.reader(dataset)
     productionReader = csv.reader(productionCsv)
     populationReader = csv.reader(populationCsv)
 
     # skip first rows of input CSV's
+    next(countryCodesReader)
     next(productionReader)
     next(datasetReader)
     next(populationReader)
@@ -31,7 +34,8 @@ with open(os.path.relpath("../doc/WorldPopulation.csv")) as populationCsv,\
         jsonDict[country] = {
                                 "items": {},
                                 "total_production": {},
-                                "population": {}
+                                "population": {},
+                                "name": ""
                             }
 
     # fill dict with relevant information from CSV
@@ -77,6 +81,13 @@ with open(os.path.relpath("../doc/WorldPopulation.csv")) as populationCsv,\
             print("hier")
             for i in range(4, 58):
                 jsonDict[country]["population"][str(i + 1956)] = row[i]
+        except KeyError:
+            pass
+
+    for row in countryCodesReader:
+        print(row)
+        try:
+            jsonDict[row[1]]["name"] = row[0]
         except KeyError:
             pass
 
