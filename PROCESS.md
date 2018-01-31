@@ -65,3 +65,7 @@ Finished checkbox system. Made tooltip with information for map. Line chart and 
 # day 12
 
 Added titles to charts. Commented code. Fixed bug if undefined value for bar chart. Website style improvements.
+
+# day 13
+
+Final changes to code.

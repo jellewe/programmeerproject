@@ -52,10 +52,6 @@ x.axis path {
   text-align: center
 }
 
-#line:hover {
-  stroke-width:5
-}
-
 #bottom {
   background-color: #edf8e9
 }

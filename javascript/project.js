@@ -1,7 +1,7 @@
 // font size for axes
 var axisFontSize = "10px"
 
-// dict for line data
+// dict for line data in line chart
 var lineData = {}
 
 /*
@@ -54,17 +54,17 @@ function drawBarChart(data, country, year, xDomain) {
     barchartTitle(country, year, data)
 
     // margins around chart in pixels
-    var margin = {top: 70, right: 30, bottom: 120, left: 50}
+    var margin = {top: 70, right: 30, bottom: 120, left: 70}
 
     // get chart size
-    chartSize = d3.select("#barChart").node().getBoundingClientRect()
+    var chartSize = d3.select("#barChart").node().getBoundingClientRect()
 
     // width and height of chart in pixels
     var width = chartSize.width - 20 - margin.left - margin.right
     var height = 450 - margin.top - margin.bottom
 
     // append bar chart svg
-    barChart = d3.select("#barChart")
+    var barChart = d3.select("#barChart")
       .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
@@ -78,7 +78,6 @@ function drawBarChart(data, country, year, xDomain) {
 
     // if undefined datum, remove item from data
     for (var key in data[country]["items"]) {
-      console.log(data[country]["items"][key]["production"][year])
       if (data[country]["items"][key]["production"][year] == undefined) {
         delete data[country]["items"][key]
       }
@@ -86,7 +85,7 @@ function drawBarChart(data, country, year, xDomain) {
 
     // values to show on x domain, if it does not already exist
     if (!xDomain) {
-      xDomain = Object.keys(data[country]["items"])
+      var xDomain = Object.keys(data[country]["items"])
     }
 
     // scale for x dimension
@@ -95,20 +94,10 @@ function drawBarChart(data, country, year, xDomain) {
       .rangeBands([0, width])
 
     // convert dict to array for enter append data
-    dataArray = []
+    var dataArray = []
     xDomain.forEach(function(item) {
       dataArray.push(data[country]["items"][item]["production"][year])
     });
-
-    // if undefined datum, remove from xDomain
-    // dataArray.forEach(function(datum, index) {
-    //   if (datum == undefined) {
-    //     indexXDomain = xDomain.indexOf(datum)
-    //     xDomain.splice(indexXDomain, 1)
-    //     indexDataArray = index
-    //   }
-    // })
-    // dataArray.splice(indexDataArray, 1)
 
     // variable for width of bars
     var barWidth = width / xDomain.length
@@ -128,9 +117,9 @@ function drawBarChart(data, country, year, xDomain) {
 
     // append x axis
     barChart.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis)
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
       .selectAll("text")
         .style("text-anchor", "end")
         .style("font-size", axisFontSize)
@@ -138,12 +127,32 @@ function drawBarChart(data, country, year, xDomain) {
         .attr("dy", "-.5em")
         .attr("transform", "rotate(-60)")
 
+    // label for x axis
+    barChart.select(".x")
+      .append("text")
+        .style("text-anchor", "end")
+        .style("font-size", "10px")
+        .attr("dx", "-1em")
+        .attr("dy", "2em")
+        .text("Food type");
+
     // append y axis
     barChart.append("g")
-        .attr("class", "y axis")
-        .call(yAxis)
+      .attr("class", "y axis")
+      .call(yAxis)
       .selectAll("text")
         .style("font-size", axisFontSize)
+
+    // label for y axis
+    barChart.select(".y")
+      .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("dy", "-5em")
+      .attr("dx", "-6.5em")
+      .style("text-anchor", "end")
+      .attr("font-size", "10px")
+      .text("Consumption in 1000 tonnes");
+
 
     // make group element for bars
     barChart.append("g")
@@ -158,14 +167,8 @@ function drawBarChart(data, country, year, xDomain) {
       .attr("height", function(d) { return height - yScale(d) })
       .attr("width", barWidth - 1)
 
-
-    // checkboxes = d3.select("#checkboxes")
-
-    // remove all children of html checkbox div
-    // checkboxes.selectAll("*").remove()
-
     // draw checkboxes below chart
-    items = Object.keys(data[country]["items"])
+    var items = Object.keys(data[country]["items"])
     drawCheckboxes(items, xDomain, data, country)
 
     // update x domain if checkbox clicked
@@ -173,7 +176,7 @@ function drawBarChart(data, country, year, xDomain) {
       var checkboxId = "#checkbox" + item
       d3.select(checkboxId).on("change", function() {
         if ($.inArray(item, xDomain) > -1) {
-          index = xDomain.indexOf(item)
+          var index = xDomain.indexOf(item)
           xDomain.splice(index, 1)
         }
         else {
@@ -202,9 +205,9 @@ Gets the maximum production value of all product groups for a specific country
 in a specific year.
 */
 function maxValue(countryData, year) {
-  max = 0
+  var max = 0
   for (item in countryData["items"]) {
-    productionValue = countryData["items"][item]["production"][year]
+    var productionValue = countryData["items"][item]["production"][year]
     if (productionValue > max) {
       max = productionValue
     }
@@ -233,15 +236,15 @@ function drawLineChart(data, country) {
     // margins around graph in pixels
     var margin = {top: 70, right: 80, bottom: 120, left: 60}
 
-      // get chart size
-      chartSize = d3.select("#lineChart").node().getBoundingClientRect()
+    // get chart size
+    var chartSize = d3.select("#lineChart").node().getBoundingClientRect()
 
-      // width and height of graph in pixels
-      var width = chartSize.width - 100 - margin.left - margin.right;
-      var height = 450 - margin.top - margin.bottom;
+    // width and height of graph in pixels
+    var width = chartSize.width - 100 - margin.left - margin.right;
+    var height = 450 - margin.top - margin.bottom;
 
     // g element for line chart
-    lineChart = d3.select("#lineChart")
+    var lineChart = d3.select("#lineChart")
       .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
@@ -255,8 +258,8 @@ function drawLineChart(data, country) {
       }
 
       // arrays for export and year information
-      exportArray = []
-      yearArray = []
+      var exportArray = []
+      var yearArray = []
       for (key in exportData[country]) {
         yearArray.push(parseInt(key))
         exportArray.push(parseInt(exportData[country][key]))
@@ -328,6 +331,16 @@ function drawLineChart(data, country) {
         .selectAll("text")
           .style("font-size", axisFontSize)
 
+      // label for y axis
+      lineChart.select(".y")
+        .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("yScale", 6)
+        .attr("dy", "1.5em")
+        .style("text-anchor", "end")
+        .attr("font-size", "10px")
+        .text("Export in US$ thousand");
+
       // function to draw lines
       var lineFunction = d3.svg.line()
         .defined(function(d) { return d })
@@ -356,31 +369,6 @@ function drawLineChart(data, country) {
           .attr("transform", function(d, i) { ; return "translate (" + xScale(lastDatum[0]) + "," + yScale(lastDatum[1]) + ")"})
           .text(data[key]["name"])
 
-        // var tooltip = lineChart.append("div")
-        //   .attr("class", "tooltip")
-        //   .style("opacity", 0)
-        //
-        // tooltip.append("text")
-        //
-        // lineChart.selectAll("path")
-        //   .on("mouseover", function(d) {
-        //     console.log("test")
-        //     tooltip
-        //       // .duration(300)
-        //       .style("opacity", .9)
-        //
-        //     var x = d3.event.pageX + "px"
-        //     var y = (d3.event.pageY - 30) + "px"
-        //     tooltip.select("text")
-        //       .text(country)
-        //
-        //     tooltip.style("transform", "translate(" + x + "," + y + ")")
-        //     .on("mouseout")
-        //       tooltip.transition()
-        //         .duration(500)
-        //         .style("opacity", 0)
-          // })
-
         dataIndex += 1
       }
     });
@@ -406,7 +394,7 @@ function mapChart(mapData, year) {
   d3.select("#mapContainer").selectAll("*").remove()
 
   // color domain to show in map
-  colorDomain = ['#d3d3d3', '#edf8e9', '#bae4b3', '#74c476', '#31a354', '#006d2c']
+  var colorDomain = ['#d3d3d3', '#edf8e9', '#bae4b3', '#74c476', '#31a354', '#006d2c']
 
   // dict for color data per country
   var colorData = {}
@@ -418,10 +406,10 @@ function mapChart(mapData, year) {
   }
 
   // buckets for map color scaler
-  buckets = [1, 200, 400, 800, 1600]
+  var buckets = [1, 200, 400, 800, 1600]
 
   // scaler to map production to color shades (< 1 means no data)
-  mapScaler = d3.scale.threshold()
+  var mapScaler = d3.scale.threshold()
    .domain(buckets)
    .range(["0", "1", "2", "3", "4", "5"])
 
@@ -459,7 +447,7 @@ function mapChart(mapData, year) {
     .selectAll(".datamaps-subunits")
       .selectAll("path")
         .on("click", function(geography) {
-          countryCode = geography.id
+          var countryCode = geography.id
           drawLineChart(mapData, countryCode)
           drawBarChart(mapData, countryCode, year)
           window.scroll({
@@ -474,7 +462,7 @@ function mapChart(mapData, year) {
     .attr("transform", "translate(50,500)");
 
   // buckets to scale data
-  bucketsLegend = ["No data", "0-200", "200-400", "400-800", "800-1600", "1600+"]
+  var bucketsLegend = ["No data", "0-200", "200-400", "400-800", "800-1600", "1600+"]
 
   // data to show in legend
   var legendData = [colorDomain, bucketsLegend]
