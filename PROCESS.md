@@ -68,4 +68,8 @@ Added titles to charts. Commented code. Fixed bug if undefined value for bar cha
 
 # day 13
 
-Final changes to code.
+Final changes to code. Started working on tooltip on bar chart, but couldn't get it working.
+
+# day 14
+
+Completed project. Lots of small improvements. Managed to make the tooltip for the barchart working.

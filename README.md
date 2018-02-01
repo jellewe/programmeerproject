@@ -5,7 +5,7 @@ Programming project for the programming minor at the University of Amsterdam
 
 Jelle Witsen Elias
 
-![Page link](https://github.io/jellewe/programmeerproject)
+![Page link](https://jellewe.github.io/programmeerproject)
 
 ## Summary
 This application will show food consumption throughout the world, and how much
