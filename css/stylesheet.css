@@ -1,3 +1,5 @@
+/*Jelle Witsen Elias, University of Amsterdam 10753532, 01-02-2018*/
+
 h1 {
   text-align: center;
   font-family: "Times New Roman", Times, serif;
@@ -71,7 +73,3 @@ x.axis path {
 .legend-text {
   font-size: 10px
 }
-
-/*#top {
-  background-color: #F4F4F4
-}*/
