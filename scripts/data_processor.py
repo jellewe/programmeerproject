@@ -1,3 +1,6 @@
+# Jelle Witsen Elias, University of Amsterdam 10753532, 01-02-2018
+# Calculates total production of countries and stores it in a CSV file.
+
 import csv
 import os
 
@@ -5,7 +8,7 @@ import os
 YEARS = 53
 FIRST_YEAR = 1961
 
-# dict with country abbreveations as keys and lists with production over the years as values
+# dict with country abbreveations as keys and lists with production as values
 productionDict = {}
 
 with open(os.path.relpath("../doc/dataset.csv"), encoding='latin-1') as file:
@@ -29,7 +32,7 @@ with open(os.path.relpath("../doc/dataset.csv"), encoding='latin-1') as file:
         for i in range(YEARS):
             productionList.append(0)
 
-        # while still reading rows about current country, calculate total production per year
+        # while reading rows of current country, calculate consumption per year
         while curRow[0] == countryCode:
 
             # iterate over values in current row
@@ -54,12 +57,7 @@ with open(os.path.relpath("../doc/dataset.csv"), encoding='latin-1') as file:
                 curRow = []
                 break
 
-        # print current country's code and production list
-        # print(countryCode)
-        # print(productionList)
-
         productionDict[countryCode] = productionList
-        print(productionDict)
 
         # advance to next country in CSV, unless end of file reached
         if curRow:

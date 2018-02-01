@@ -1,5 +1,5 @@
 # Jelle Witsen Elias, University of Amsterdam 10753532, 01-02-2018
-# adds country codes to json file to use in project
+# Adds country codes to json file to use in project
 
 import csv
 import os

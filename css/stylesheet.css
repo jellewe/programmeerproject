@@ -65,10 +65,10 @@ x.axis path {
 .tooltip {
   position: absolute;
   text-align: center;
-  width: 60px;
-  height: 20px;
-  font: 12px sans-serif;
-  background: silver;
+  width: 80px;
+  height: 12px;
+  background: #d3d3d3;
+  pointer-events: none;
 }
 
 .form-check-label {
@@ -76,9 +76,9 @@ x.axis path {
 }
 
 .legend-header {
-  font-size: 12px
+  font-size: 12px;
 }
 
 .legend-text {
-  font-size: 10px
+  font-size: 10px;
 }

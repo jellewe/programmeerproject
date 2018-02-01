@@ -1,3 +1,6 @@
+# Jelle Witsen Elias, University of Amsterdam 10753532, 01-02-2018
+# Builds json with relevant data to use in website
+
 import csv
 import os
 import json
@@ -24,7 +27,6 @@ with open(os.path.relpath("../doc/WorldPopulation.csv")) as populationCsv,\
     for row in productionReader:
         countriesList.append(row[0])
     countriesList = sorted(countriesList)
-    print(countriesList)
 
     # dict with all JSON information
     jsonDict = {}
@@ -72,20 +74,15 @@ with open(os.path.relpath("../doc/WorldPopulation.csv")) as populationCsv,\
             jsonDict[row[0]]["total_production"][str(i + 1960)] = row[i]
 
     for row in populationReader:
-        print(row)
-        print(row[1])
         country = row[1]
-        print(country)
         try:
             jsonDict[country]["population"]
-            print("hier")
             for i in range(4, 58):
                 jsonDict[country]["population"][str(i + 1956)] = row[i]
         except KeyError:
             pass
 
     for row in countryCodesReader:
-        print(row)
         try:
             jsonDict[row[1]]["name"] = row[0]
         except KeyError:

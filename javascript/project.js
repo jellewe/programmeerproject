@@ -1,3 +1,10 @@
+/*
+Jelle Witsen Elias, University of Amsterdam 10753532, 01-02-2018
+Programming project for the university of Amsterdam. Renders a webpage with
+visualizations of world food consumption and Dutch food export. Main elements
+are an interactive map, a bar chart and a line chart.
+*/
+
 // font size for axes
 var axisFontSize = "10px";
 
@@ -18,13 +25,150 @@ window.onload = function() {
     mapChart(data, 1961);
 
     // add slider, draw map again when it is moved
-    d3.select('#sliderd').call(d3.slider()
+    d3.select('#slider').call(d3.slider()
       .axis(true).min(1961).max(2013).step(1)
       .on("slide", function(evt, value) {
           mapChart(data, value);
       })
     );
   });
+};
+
+/*
+Draws map with data about total production for countries in specified year.
+*/
+function mapChart(mapData, year) {
+  // remove all children of html map div
+  d3.select("#mapContainer").selectAll("*").remove();
+
+  // color domain to show in map
+  var colorDomain = ['#d3d3d3', '#edf8e9', '#bae4b3', '#74c476', '#31a354',
+                     '#006d2c'];
+
+  // dict for color data per country
+  var colorData = {};
+
+  // get total production value in kilograms (* 1000000) divided by population
+  for (var country in mapData) {
+    colorData[country] = parseInt(mapData[country]["total_production"][year]) *
+    1000000 / parseInt(mapData[country]["population"][year]);
+  };
+
+  // buckets for map color scaler
+  var buckets = [1, 200, 400, 800, 1600];
+
+  // scaler to map production to color shades (< 1 means no data)
+  var mapScaler = d3.scale.threshold()
+   .domain(buckets)
+   .range(["0", "1", "2", "3", "4", "5"]);
+
+  // convert production data to color category
+  var colorCategories = {};
+  for (var country in colorData) {
+    colorCategories[country] = { fillKey: mapScaler(colorData[country]) };
+  };
+
+  // draw world map
+  var map = new Datamap({
+    element: document.getElementById("mapContainer"),
+    fills: {
+      0: colorDomain[0],
+      1: colorDomain[1],
+      2: colorDomain[2],
+      3: colorDomain[3],
+      4: colorDomain[4],
+      5: colorDomain[5],
+      defaultFill: colorDomain[0]
+    },
+    data: colorCategories,
+    geographyConfig: {
+      borderColor: "#000000",
+      borderOpacity: 0.2,
+      highlightBorderColor: "#000000",
+      highlightBorderWidth: 1,
+      highlightBorderOpacity: 0.2,
+      popupTemplate: function(geography) {
+        return tooltipInfo(geography.properties.name, geography.id, mapData, year)
+      }
+    }
+  });
+  d3.select("#mapContainer").select(".datamap")
+    .selectAll(".datamaps-subunits")
+      .selectAll("path")
+        .on("click", function(geography) {
+          var countryCode = geography.id;
+          drawLineChart(mapData, countryCode);
+          drawBarChart(mapData, countryCode, year);
+          window.scroll({
+            top: 2500,
+            behavior: 'smooth'
+          })
+        });
+
+  // group element for legend
+  var legend = d3.select("#mapContainer").select(".datamap").append("g")
+    .attr("class", "legend")
+    .attr("transform", "translate(50,500)");
+
+  // buckets to scale data
+  var bucketsLegend = ["No data", "0-200", "200-400", "400-800", "800-1600",
+                       "1600+"];
+
+  // data to show in legend
+  var legendData = [colorDomain, bucketsLegend];
+
+  // append group elements to legend group for every element of legend
+  legend.selectAll(".legenditem")
+    .data(legendData[0])
+    .enter().append("g")
+        .attr("class", "legenditem")
+        .attr("transform", function(d, i) {
+          return "translate(0," + i * 10 + ")"
+        });
+
+  // make squares with specific for legend items
+  legend.selectAll(".legenditem")
+    .append("rect")
+    .attr("width", 8)
+    .attr("height", 8)
+    .style("fill", function(d, i) { return d });
+
+  // header to show above legend
+  legend.append("text")
+    .attr("class", "legend-header")
+    .attr("transform", "translate(0, -10)")
+    .text("Consumption in kilograms divided by population");
+
+  // put text next to legend squares
+  legend.selectAll(".legenditem")
+    .attr("class", "legend-text")
+    .append("text")
+    .attr("x", 10)
+    .attr("y", 4)
+    .attr("dy", ".35em")
+    .style("font-size", "10px")
+    .text(function(d, i) { return legendData[1][i] });
+};
+
+/*
+Renders html string for tooltip, with relevant data.
+*/
+function tooltipInfo(countryName, countryCode, data, year) {
+  var htmlString = "<div class=\"hoverinfo\"><strong>" + countryName + "<br />";
+  htmlString += "</strong>";
+  htmlString += "Consumption in 1000 tonnes: ";
+  htmlString += data[countryCode]["total_production"][year];
+  htmlString += "<br />";
+  htmlString += "Total population in thousands: ";
+  htmlString += Math.round(data[countryCode]["population"][year] / 1000);
+  htmlString += "<br />";
+  var totalProduction = parseInt(data[countryCode]["total_production"][year]) *
+                        1000000;
+  var population = parseInt(data[countryCode]["population"][year]);
+  htmlString += "Consumption divided by population: ";
+  htmlString += (Math.round(totalProduction / population)).toString();
+  htmlString += "</div>";
+  return htmlString;
 };
 
 /*
@@ -170,25 +314,29 @@ function drawBarChart(data, country, year, xDomain) {
 
 
 
-    // make tooltip with opacity 0 (it should not show up when not hovering above it)
-    var tooltip = barChart.append("div")
+    // make tooltip with opacity 0 (don't appear when not hovering above it)
+    var tooltip = d3.select("#barChart").append("div")
       .attr("class", "tooltip")
-      .style("opacity", 0.5);
+      .style("opacity", 0);
 
-    barSelection
-      .on("mouseover", function(d) {
-              tooltip.transition()
-                .duration(200)
-                .style("opacity", .9)
-              tooltip.html(d.rainfall + " mm<br/>")
-                .style("left", (d3.mouse(this)[0]) + "px")
-                .style("top", ((d3.mouse(this)[1]) - 28) + "px");
-              })
+    // make tooltip appear with data when hovering above it
+    barSelection.on("mouseover", function(d) {
+      console.log(tooltip)
+      tooltip.transition()
+        .duration(200)
+        .style("opacity", .9)
+      tooltip.html(function() {
+        return d + " * 1000 tonnes";
+      })
+        .style("font-size", "8px")
+        .style("left", ((d3.mouse(this)[0]) + 90) + "px")
+        .style("top", ((d3.mouse(this)[1]) - 28 + 70) + "px");
+      })
       .on("mouseout", function(d) {
         tooltip.transition()
           .duration(200)
-          .style("opacity", 0.5)
-      })
+          .style("opacity", 0);
+      });
 
 
     // draw checkboxes below chart
@@ -211,6 +359,84 @@ function drawBarChart(data, country, year, xDomain) {
         drawBarChart(data, country, year, xDomain);
       });
     });
+  };
+};
+
+/*
+Draws checkboxes at the bottom of the page, to make selection for bars to show.
+*/
+function drawCheckboxes(checkboxData, checkedItems, data, country) {
+  // variable for checkboxes
+  var checkboxes = d3.select("#checkboxes");
+
+  // remove all children of html checkbox div
+  d3.selectAll(".col").selectAll("*").remove();
+
+  // amount of columns and rows for checkboxes
+  var columns = 3;
+  var rows = 7;
+
+  // calculate column id and checkbox number
+  for (i = 0; i < columns; i++) {
+    var columnId = "#col" + String(i);
+    for (j = 0; j < rows; j++) {
+      var checkboxNumber = j + i * rows;
+
+      // determine id for checkbox
+      if (checkboxData[checkboxNumber]) {
+        var checkboxId = "checkbox" + String(checkboxData[checkboxNumber]);
+      }
+      else {
+        var checkboxId = "checkbox" + String(checkboxNumber);
+      };
+
+      // id for checkbox div
+      var checkDivId = "checkDiv" + String(checkboxNumber);
+
+      // draw checkboxes
+      checkboxes.select(columnId)
+        .append("div")
+          .attr("class", "form-check")
+          .attr("id", checkDivId)
+          .append("input")
+            .attr("class", "form-check-input")
+            .attr("type", "checkbox")
+            .attr("value", "")
+            .attr("id", checkboxId)
+            .property("checked", true);
+
+      // disabled checkboxes if no data for food group
+      if (!checkboxData[checkboxNumber]) {
+        d3.select("#" + checkboxId)
+          .property("disabled", true)
+          .property("checked", false);
+      };
+
+      // if box already unchecked, uncheck again when drawing
+      if (!($.inArray(String(checkboxData[checkboxNumber]), checkedItems) >
+            -1)) {
+        d3.select("#" + checkboxId)
+          .property("checked", false);
+      };
+
+      // append labels to divs
+      d3.select("#" + checkDivId)
+        .append("label")
+          .attr("class", "form-check-label")
+          .attr("for", checkboxId);
+
+      // if data for current food group, draw label
+      if (data[country]["items"][checkboxData[checkboxNumber]] != undefined) {
+        d3.select("#" + checkDivId).select("label")
+          .html(data[country]["items"][checkboxData[checkboxNumber]]["name"]);
+      }
+
+      // disabled checkboxes are not displayed properly without empty label
+      else {
+        d3.select("#" + checkDivId).select("label")
+          .html("");
+      };
+    };
   };
 };
 
@@ -411,219 +637,4 @@ function noDataMessage(country) {
       .attr("id", "data-message")
       .attr("transform", "translate(0,300)")
       .text("No data available for: " + country)
-};
-
-/*
-Draws map with data about total production for countries in specified year.
-*/
-function mapChart(mapData, year) {
-  // remove all children of html map div
-  d3.select("#mapContainer").selectAll("*").remove();
-
-  // color domain to show in map
-  var colorDomain = ['#d3d3d3', '#edf8e9', '#bae4b3', '#74c476', '#31a354',
-                     '#006d2c'];
-
-  // dict for color data per country
-  var colorData = {};
-
-  // get total production value in kilograms (* 1000000) divided by population
-  for (var country in mapData) {
-    colorData[country] = parseInt(mapData[country]["total_production"][year]) *
-    1000000 / parseInt(mapData[country]["population"][year]);
-  };
-
-  // buckets for map color scaler
-  var buckets = [1, 200, 400, 800, 1600];
-
-  // scaler to map production to color shades (< 1 means no data)
-  var mapScaler = d3.scale.threshold()
-   .domain(buckets)
-   .range(["0", "1", "2", "3", "4", "5"]);
-
-  // convert production data to color category
-  var colorCategories = {};
-  for (var country in colorData) {
-    colorCategories[country] = { fillKey: mapScaler(colorData[country]) };
-  };
-
-  // draw world map
-  var map = new Datamap({
-    element: document.getElementById("mapContainer"),
-    fills: {
-      0: colorDomain[0],
-      1: colorDomain[1],
-      2: colorDomain[2],
-      3: colorDomain[3],
-      4: colorDomain[4],
-      5: colorDomain[5],
-      defaultFill: colorDomain[0]
-    },
-    data: colorCategories,
-    geographyConfig: {
-      borderColor: "#000000",
-      borderOpacity: 0.2,
-      highlightBorderColor: "#000000",
-      highlightBorderWidth: 1,
-      highlightBorderOpacity: 0.2,
-      popupTemplate: function(geography) {
-        return tooltipInfo(geography.properties.name, geography.id, mapData, year)
-      }
-    }
-  });
-  d3.select("#mapContainer").select(".datamap")
-    .selectAll(".datamaps-subunits")
-      .selectAll("path")
-        .on("click", function(geography) {
-          var countryCode = geography.id;
-          drawLineChart(mapData, countryCode);
-          drawBarChart(mapData, countryCode, year);
-          window.scroll({
-            top: 2500,
-            behavior: 'smooth'
-          })
-        });
-
-  // group element for legend
-  var legend = d3.select("#mapContainer").select(".datamap").append("g")
-    .attr("class", "legend")
-    .attr("transform", "translate(50,500)");
-
-  // buckets to scale data
-  var bucketsLegend = ["No data", "0-200", "200-400", "400-800", "800-1600",
-                       "1600+"];
-
-  // data to show in legend
-  var legendData = [colorDomain, bucketsLegend];
-
-  // append group elements to legend group for every element of legend
-  legend.selectAll(".legenditem")
-    .data(legendData[0])
-    .enter().append("g")
-        .attr("class", "legenditem")
-        .attr("transform", function(d, i) {
-          return "translate(0," + i * 10 + ")"
-        });
-
-  // make squares with specific for legend items
-  legend.selectAll(".legenditem")
-    .append("rect")
-    .attr("width", 8)
-    .attr("height", 8)
-    .style("fill", function(d, i) { return d });
-
-  // header to show above legend
-  legend.append("text")
-    .attr("class", "legend-header")
-    .attr("transform", "translate(0, -10)")
-    .text("Consumption in kilograms divided by population");
-
-  // put text next to legend squares
-  legend.selectAll(".legenditem")
-    .attr("class", "legend-text")
-    .append("text")
-    .attr("x", 10)
-    .attr("y", 4)
-    .attr("dy", ".35em")
-    .style("font-size", "10px")
-    .text(function(d, i) { return legendData[1][i] });
-};
-
-/*
-Renders html string for tooltip, with relevant data.
-*/
-function tooltipInfo(countryName, countryCode, data, year) {
-  var htmlString = "<div class=\"hoverinfo\"><strong>" + countryName + "<br />";
-  htmlString += "</strong>";
-  htmlString += "Consumption in 1000 tonnes: ";
-  htmlString += data[countryCode]["total_production"][year];
-  htmlString += "<br />";
-  htmlString += "Total population in thousands: ";
-  htmlString += Math.round(data[countryCode]["population"][year] / 1000);
-  htmlString += "<br />";
-  var totalProduction = parseInt(data[countryCode]["total_production"][year]) *
-                        1000000;
-  var population = parseInt(data[countryCode]["population"][year]);
-  htmlString += "Consumption divided by population: ";
-  htmlString += (Math.round(totalProduction / population)).toString();
-  htmlString += "</div>";
-  return htmlString;
-};
-
-/*
-Draws checkboxes at the bottom of the page, to make selection for bars to show.
-*/
-function drawCheckboxes(checkboxData, checkedItems, data, country) {
-  // variable for checkboxes
-  var checkboxes = d3.select("#checkboxes");
-
-  // remove all children of html checkbox div
-  d3.selectAll(".col").selectAll("*").remove();
-
-  // amount of columns and rows for checkboxes
-  var columns = 3;
-  var rows = 7;
-
-  // calculate column id and checkbox number
-  for (i = 0; i < columns; i++) {
-    var columnId = "#col" + String(i);
-    for (j = 0; j < rows; j++) {
-      var checkboxNumber = j + i * rows;
-
-      // determine id for checkbox
-      if (checkboxData[checkboxNumber]) {
-        var checkboxId = "checkbox" + String(checkboxData[checkboxNumber]);
-      }
-      else {
-        var checkboxId = "checkbox" + String(checkboxNumber);
-      };
-
-      // id for checkbox div
-      var checkDivId = "checkDiv" + String(checkboxNumber);
-
-      // draw checkboxes
-      checkboxes.select(columnId)
-        .append("div")
-          .attr("class", "form-check")
-          .attr("id", checkDivId)
-          .append("input")
-            .attr("class", "form-check-input")
-            .attr("type", "checkbox")
-            .attr("value", "")
-            .attr("id", checkboxId)
-            .property("checked", true);
-
-      // disabled checkboxes if no data for food group
-      if (!checkboxData[checkboxNumber]) {
-        d3.select("#" + checkboxId)
-          .property("disabled", true)
-          .property("checked", false);
-      };
-
-      // if box already unchecked, uncheck again when drawing
-      if (!($.inArray(String(checkboxData[checkboxNumber]), checkedItems) >
-            -1)) {
-        d3.select("#" + checkboxId)
-          .property("checked", false);
-      };
-
-      // append labels to divs
-      d3.select("#" + checkDivId)
-        .append("label")
-          .attr("class", "form-check-label")
-          .attr("for", checkboxId);
-
-      // if data for current food group, draw label
-      if (data[country]["items"][checkboxData[checkboxNumber]] != undefined) {
-        d3.select("#" + checkDivId).select("label")
-          .html(data[country]["items"][checkboxData[checkboxNumber]]["name"]);
-      }
-
-      // disabled checkboxes are not displayed properly without empty label
-      else {
-        d3.select("#" + checkDivId).select("label")
-          .html("");
-      };
-    };
-  };
 };
