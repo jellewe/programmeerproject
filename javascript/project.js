@@ -16,7 +16,7 @@ Main function, draws initial map chart and updates map chart if slider is moved.
 */
 window.onload = function() {
   // load data from json file
-  d3.json("../doc/dataset_foodgroups.json", function(error, data) {
+  d3.json("https://raw.githubusercontent.com/jellewe/programmeerproject/master/doc/dataset_foodgroups.json", function(error, data) {
     if (error){
       window.alert("an error has occured: " + error);
     };
@@ -503,7 +503,7 @@ function drawLineChart(data, country) {
                              margin.top + ")");
 
     // open export data file
-    d3.json("../doc/export_data.json", function(error, exportData) {
+    d3.json("https://raw.githubusercontent.com/jellewe/programmeerproject/master/doc/export_data.json", function(error, exportData) {
       if (error) {
         window.alert("an error has occured: " + error);
       };
