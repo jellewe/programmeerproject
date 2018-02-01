@@ -168,6 +168,29 @@ function drawBarChart(data, country, year, xDomain) {
       .attr("height", function(d) { return height - yScale(d) })
       .attr("width", barWidth - 1);
 
+
+
+    // make tooltip with opacity 0 (it should not show up when not hovering above it)
+    var tooltip = barChart.append("div")
+      .attr("class", "tooltip")
+      .style("opacity", 0.5);
+
+    barSelection
+      .on("mouseover", function(d) {
+              tooltip.transition()
+                .duration(200)
+                .style("opacity", .9)
+              tooltip.html(d.rainfall + " mm<br/>")
+                .style("left", (d3.mouse(this)[0]) + "px")
+                .style("top", ((d3.mouse(this)[1]) - 28) + "px");
+              })
+      .on("mouseout", function(d) {
+        tooltip.transition()
+          .duration(200)
+          .style("opacity", 0.5)
+      })
+
+
     // draw checkboxes below chart
     var items = Object.keys(data[country]["items"]);
     drawCheckboxes(items, xDomain, data, country);

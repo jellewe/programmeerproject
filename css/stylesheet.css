@@ -24,7 +24,7 @@ x.axis path {
 }
 
 #data-message {
-  text-align: center
+  text-align: center;
 }
 
 #mapContainer {
@@ -37,33 +37,42 @@ x.axis path {
 }
 
 #margin-top {
-  height: 20px
+  height: 20px;
 }
 
 #charts {
-  background-color: #edf8e9
+  background-color: #edf8e9;
 }
 
 #checkboxes {
-  transform: translate(20px)
+  transform: translate(20px);
 }
 
 #chart-titles {
   background-color: #edf8e9;
   transform: translate(0, 50px);
-  text-align: center
+  text-align: center;
 }
 
 #bottom {
-  background-color: #edf8e9
+  background-color: #edf8e9;
 }
 
 #line-name {
-  font-size: 14px
+  font-size: 14px;
+}
+
+.tooltip {
+  position: absolute;
+  text-align: center;
+  width: 60px;
+  height: 20px;
+  font: 12px sans-serif;
+  background: silver;
 }
 
 .form-check-label {
-  font-size: 10px
+  font-size: 10px;
 }
 
 .legend-header {

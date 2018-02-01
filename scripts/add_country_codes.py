@@ -1,3 +1,6 @@
+# Jelle Witsen Elias, University of Amsterdam 10753532, 01-02-2018
+# adds country codes to json file to use in project
+
 import csv
 import os
 import json
@@ -9,16 +12,17 @@ with open(os.path.relpath("../doc/WITS-Partner.csv"), encoding='latin-1') as dat
     datasetReader = csv.reader(dataset)
     countryCodesReader = csv.reader(codesCsv)
 
+    # skip first rows, store info of first row of dataset csv
     columnDescriptions = next(datasetReader)
     next(countryCodesReader)
 
+    # add country codes to dict
     countryCodesDict = {}
     for row in countryCodesReader:
         countryCodesDict[row[0]] = row[1]
 
-    print(countryCodesDict)
+    # add country codes to json dict
     jsonDict = {}
-
     for row in datasetReader:
         try:
             countryCode = countryCodesDict[row[1]]
@@ -28,4 +32,5 @@ with open(os.path.relpath("../doc/WITS-Partner.csv"), encoding='latin-1') as dat
         for i in range(5, 27):
             jsonDict[countryCode][columnDescriptions[i]] = row[i]
 
+    # dump json
     json.dump(jsonDict, outfile)
