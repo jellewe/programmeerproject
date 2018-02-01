@@ -53,6 +53,9 @@ The second data source, with information about Dutch food export to countries,
 is from wits.worldbank.org:
 [Database2](https://wits.worldbank.org/CountryProfile/en/Country/NLD/StartYear/1992/EndYear/2013/TradeFlow/Export/Indicator/XPRT-TRD-VL/Partner/BY-COUNTRY/Product/16-24_FoodProd)
 
+The third data source, with information about population, is also from Kaggle:
+[Database3](https://www.kaggle.com/centurion1986/world-population/data)
+
 The external components used by the website are:
 - The d3 library for javascript:
 [d3](https://d3js.org/)
