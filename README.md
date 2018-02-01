@@ -35,8 +35,9 @@ of all the countries in the world by color-mapping information to them. There
 will also be a third visualization: a line chart of the food export of the
 Netherlands to the specific country over the course of the years 1992 - 2013.
 Extra lines will be added to the chart when other countries are clicked, and
-they are removed when the country is clicked again. The map will look as
-follows:
+they are removed when the country is clicked again.
+
+The map will look as follows:
 
 ![map](/doc/screenshot1.png)
 

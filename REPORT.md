@@ -1,8 +1,8 @@
 # Description
 
 This application shows food consumption throughout the world on a map. It also
-shows which food types are consumed in a bar chart, and Dutch export to a
-selected country in a line chart.
+shows which food types are consumed in a bar chart, and Dutch export to
+selected countries in a line chart.
 
 ![screenshot](/doc/screenshot1.png)
 
@@ -68,9 +68,10 @@ bug-free though, but this took almost three days.
 - I made a tooltip on the bar chart, so you could see the exact values.
 
 - Quite late in the project I realized my dataset was about food consumption,
-not
+not production. This wasn't a real problem for the story I wanted to tell,
+though.
 
-I think these changes made the overall product better. Especially the decision
+I think the changes made the overall product better. Especially the decision
 of dividing a country's total consumption by the total population makes the map
 a lot more interesting, and makes you wonder why some countries have much higher
 consumption per capita than others. This makes it also more interesting to see
@@ -82,4 +83,4 @@ elements on the screen, but because it doesn't always show op it's not too bad.
 As to the overall design: I decided to pick a shade of green to use in almost
 all elements of the website (the map and charts). I think this gives the website
 a coherent style. For the line chart, it simply wasn't practical to pick shades
-of green so I picked some well distinguishable colors from colorbrewer2.org
+of green so I picked some well distinguishable colors from colorbrewer2.org.

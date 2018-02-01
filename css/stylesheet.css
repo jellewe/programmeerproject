@@ -1,5 +1,6 @@
 /*Jelle Witsen Elias, University of Amsterdam 10753532, 01-02-2018*/
 
+/*text inside jumbotron*/
 h1 {
   text-align: center;
   font-family: "Times New Roman", Times, serif;
@@ -11,18 +12,20 @@ h1 {
   shape-rendering: crispEdges;
 }
 
-x.axis path {
+/*x.axis path {
   display: none;
-}
+}*/
 
 .bars rect {
   fill: #006d2c;
 }
 
+/*shade of green of jumbotron, !important to override bootstrap default*/
 .jumbotron {
   background-color: #edf8e9 !important;
 }
 
+/*message when no data available for bar chart*/
 #data-message {
   text-align: center;
 }
@@ -44,6 +47,7 @@ x.axis path {
   background-color: #edf8e9;
 }
 
+/*transform checkboxes a bit to the left, so they are not on side of screen*/
 #checkboxes {
   transform: translate(20px);
 }
@@ -62,6 +66,7 @@ x.axis path {
   font-size: 14px;
 }
 
+/*tooltip css, no pointer events when hovering above tooltip itself*/
 .tooltip {
   position: absolute;
   text-align: center;

@@ -321,7 +321,6 @@ function drawBarChart(data, country, year, xDomain) {
 
     // make tooltip appear with data when hovering above it
     barSelection.on("mouseover", function(d) {
-      console.log(tooltip)
       tooltip.transition()
         .duration(200)
         .style("opacity", .9)
