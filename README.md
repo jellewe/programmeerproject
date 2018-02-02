@@ -7,6 +7,8 @@ Jelle Witsen Elias
 
 [Page link](https://jellewe.github.io/programmeerproject)
 
+[Product demo](https://youtu.be/V7rHa2Am9AI)
+
 ## Summary
 This application will show food consumption throughout the world, and how much
 the Netherlands has been exporting to a specific country. The goal is to
